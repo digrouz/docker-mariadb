@@ -4,8 +4,6 @@ MAINTAINER DI GREGORIO Nicolas "nicolas.digregorio@gmail.com"
 ### Environment variables
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
-COPY docker-entrypoint.sh /usr/local/bin/
-
 ### Install Applications DEBIAN_FRONTEND=noninteractive  --no-install-recommends
 RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
     apt-get update && \
@@ -34,6 +32,7 @@ RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
 ### Volume
 VOLUME ["/var/lib/mysql","/etc/mysql/conf.d/"]
 
+COPY docker-entrypoint.sh /usr/local/bin/
 
 ### Expose ports
 EXPOSE 3306
