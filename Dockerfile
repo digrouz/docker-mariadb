@@ -12,7 +12,7 @@ RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
 		  echo mariadb-server-$MARIADB_MAJOR mysql-server/root_password_again password 'unused'; \
 	  } | debconf-set-selections && \
 	  groupadd -g 107 mysql && \
-    useradd sabnzbd -u 104 -g mysql -r -m /var/lib/mysql -s /bin/false && \
+    useradd sabnzbd -u 104 -g mysql -r -m -d /var/lib/mysql -s /bin/false && \
     apt-get install -y --no-install-recommends ca-certificates mariadb-server socat && \
     sed -ri 's/^user\s/#&/' /etc/mysql/my.cnf /etc/mysql/conf.d/* && \
     rm -rf /var/lib/mysql && \
