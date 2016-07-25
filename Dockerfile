@@ -8,8 +8,8 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
     apt-get update && \
     { \
-		  echo mariadb-server-$MARIADB_MAJOR mysql-server/root_password password 'unused'; \
-		  echo mariadb-server-$MARIADB_MAJOR mysql-server/root_password_again password 'unused'; \
+		  echo mariadb-server-10 mysql-server/root_password password 'unused'; \
+		  echo mariadb-server-10 mysql-server/root_password_again password 'unused'; \
 	  } | debconf-set-selections && \
 	  groupadd -g 107 mysql && \
     useradd sabnzbd -u 104 -g mysql -r -m -d /var/lib/mysql -s /bin/false && \
