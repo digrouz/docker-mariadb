@@ -32,7 +32,7 @@ RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
 ### Volume
 VOLUME ["/var/lib/mysql","/etc/mysql/conf.d/"]
 
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY ./docker-entrypoint.sh /
 
 ### Expose ports
 EXPOSE 3306
