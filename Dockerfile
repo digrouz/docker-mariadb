@@ -13,7 +13,8 @@ RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
     } | debconf-set-selections && \
     groupadd -g 2004 mysql && \
     useradd mysql -u 2004 -g mysql -r -m -d /var/lib/mysql -s /bin/false && \
-    apt-get install -y --no-install-recommends ca-certificates mariadb-server socat && \
+    apt-get install -y --no-install-recommends ca-certificates mariadb-server socat wget && \
+    wget --no-check-certificate https://raw.githubusercontent.com/digrouz/docker-deb-mariadb/master/docker-entrypoint.sh -o /usr/local/bin/docker-entrypoint.sh && \
     sed -ri 's/^user\s/#&/' /etc/mysql/my.cnf /etc/mysql/conf.d/* && \
     rm -rf /var/lib/mysql && \
     mkdir -p /var/lib/mysql /var/run/mysqld && \ 
@@ -31,8 +32,6 @@ RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
 
 ### Volume
 VOLUME ["/var/lib/mysql","/etc/mysql/conf.d/"]
-
-COPY ./docker-entrypoint.sh /usr/local/bin/
 
 ### Expose ports
 EXPOSE 3306
