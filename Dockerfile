@@ -25,14 +25,14 @@ RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
     apt-get -y autoclean && \ 
     apt-get -y clean && \
     apt-get -y autoremove && \
-    ln -s /usr/local/bin/docker-entrypoint.sh / && \
+    ln -s usr/local/bin/docker-entrypoint.sh / && \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/*
 
 ### Volume
 VOLUME ["/var/lib/mysql","/etc/mysql/conf.d/"]
 
-COPY ./docker-entrypoint.sh /
+COPY ./docker-entrypoint.sh /usr/local/bin/
 
 ### Expose ports
 EXPOSE 3306
