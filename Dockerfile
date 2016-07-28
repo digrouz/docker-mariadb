@@ -40,5 +40,5 @@ EXPOSE 3306
 USER   mysql
 
 ### Start mysql
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["mysqld"]
