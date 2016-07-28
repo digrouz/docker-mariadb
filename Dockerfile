@@ -41,4 +41,3 @@ USER   mysql
 
 ### Start mysql
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["mysqld"]
