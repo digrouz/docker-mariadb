@@ -26,7 +26,7 @@ RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
     apt-get -y autoclean && \ 
     apt-get -y clean && \
     apt-get -y autoremove && \
-    ln -s usr/local/bin/docker-entrypoint.sh / && \
+    ln -s /usr/local/bin/docker-entrypoint.sh / && \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/*
 
@@ -40,4 +40,4 @@ EXPOSE 3306
 USER   mysql
 
 ### Start mysql
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
