@@ -37,7 +37,8 @@ VOLUME ["/var/lib/mysql","/etc/mysql/conf.d/"]
 EXPOSE 3306
 
 ### Running User
-USER   mysql
+#USER   mysql
 
 ### Start mysql
 ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["mysqld"]
