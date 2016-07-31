@@ -2,7 +2,7 @@ FROM debian:8
 MAINTAINER DI GREGORIO Nicolas "nicolas.digregorio@gmail.com"
 
 ### Environment variables
-ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
+#ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
 ### Install Applications DEBIAN_FRONTEND=noninteractive  --no-install-recommends
 RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
@@ -15,6 +15,7 @@ RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
     useradd mysql -u 2004 -g mysql -r -m -d /var/lib/mysql -s /bin/false && \
     apt-get install -y --no-install-recommends ca-certificates mariadb-server socat wget && \
     wget --no-check-certificate https://raw.githubusercontent.com/digrouz/docker-deb-mariadb/master/docker-entrypoint.sh -O /usr/local/bin/docker-entrypoint.sh && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh && \
     sed -ri 's/^user\s/#&/' /etc/mysql/my.cnf /etc/mysql/conf.d/* && \
     rm -rf /var/lib/mysql && \
     mkdir -p /var/lib/mysql /var/run/mysqld && \ 
@@ -37,8 +38,8 @@ VOLUME ["/var/lib/mysql","/etc/mysql/conf.d/"]
 EXPOSE 3306
 
 ### Running User
-#USER   mysql
+USER   mysql
 
 ### Start mysql
-#ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-#CMD ["mysqld"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["mysqld"]
