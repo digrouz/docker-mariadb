@@ -1,3 +1,4 @@
+# vim:set ft=dockerfile:
 FROM debian:8
 MAINTAINER DI GREGORIO Nicolas "nicolas.digregorio@gmail.com"
 
@@ -34,10 +35,11 @@ RUN perl -npe 's/main/main\ contrib\ non-free/' -i /etc/apt/sources.list && \
     apt-get -y autoclean && \ 
     apt-get -y clean && \
     apt-get -y autoremove && \
+    ln -s /usr/local/bin/docker-entrypoint.sh / && \
     gosu nobody true && \
     apt-get purge -y --auto-remove ca-certificates wget && \
-    ln -s /usr/local/bin/docker-entrypoint.sh / && \
     rm -rf /tmp/* && \
+    rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/tmp/*
 
 ### Volume
