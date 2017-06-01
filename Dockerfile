@@ -1,6 +1,5 @@
-# vim:set ft=dockerfile:
 FROM debian:8
-MAINTAINER DI GREGORIO Nicolas "nicolas.digregorio@gmail.com"
+LABEL maintainer "DI GREGORIO Nicolas <nicolas.digregorio@gmail.com>"
 
 ### Environment variables
 ENV GOSU_VERSION 1.9
