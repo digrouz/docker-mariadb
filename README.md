@@ -72,10 +72,7 @@ Sets root (*not* the user specified in `MYSQL_USER`!) user as expired once init 
 * The docker entrypoint can upgrade operating system at each startup. To enable this feature, just add `-e DOCKUPGRADE=1` at container creation.
 * As an alternative to passing sensitive information via environment variables, `_FILE` may be appended to the previously listed environment variables, causing the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in `/run/secrets/<secret_name>` files. 
 * When a container is started for the first time, a new database with the specified name will be created and initialized with the provided configuration variables. Furthermore, it will execute files with extensions `.sh`, `.sql` and `.sql.gz` that are found in `/docker-entrypoint-initdb.d`.
-* Note that users on host systems with `SELinux` enabled may see issues when storing data files outside the container. The current workaround is to assign the relevant `SELinux` policy type to the new data directory so that the container will be allowed to access it:
-
-
-    $ chcon -Rt svirt_sandbox_file_t /my/own/datadir
+* Note that users on host systems with `SELinux` enabled may see issues when storing data files outside the container. The current workaround is to assign the relevant `SELinux` policy type to the new data directory so that the container will be allowed to access it: `$ chcon -Rt svirt_sandbox_file_t /my/own/datadir`
 
 ## Issues
 
