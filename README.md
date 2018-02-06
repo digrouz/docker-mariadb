@@ -1,7 +1,12 @@
-# docker-deb-mariadb
-Install Mariadb into Debian Jessie Container
+# docker-mariadb
+Install Mariadb into a Linux Container
 
 ![mariadb](https://mariadb.org/wp-content/uploads/2015/05/MariaDB-Foundation-horizontal-x52.png)
+
+## Tags
+Several tags are available:
+* `latest`: see `10.2-centos7`
+* `10.2-centos7`: [10.2-centos7/Dokerfile](https://github.com/digrouz/docker-mariadb/blob/10.2-centos7/Dockerfile)
 
 ## Description
 
@@ -11,15 +16,30 @@ https://mariadb.org
 
 ## Usage
     docker create --name=mariadb \
-     -v <path to data>:/var/lib/mysql \
-     -v <path to config>:/etc/mysql/conf.d \
-     -v /etc/localtime:/etc/localtime:ro \
-     -p 3306:3306 \
-     -e MYSQL_ROOT_PASSWORD="<password>"  digrouz/docker-deb-mariadb
+      -v <path to data>:/var/lib/mysql \
+      -v /etc/localtime:/etc/localtime:ro \
+      -p 3306:3306 \
+      -e DOCKUID=<UID default:2004> \
+      -e DOCKGID=<GID default:2004> \
+      -e DOCKUPGRADE=<0|1> \
+      -e MYSQL_ROOT_PASSWORD="<password>"  \
+    digrouz/mariadb
 
 ## Environment Variables
 
 When you start the `mariadb` image, you can adjust the configuration of the MariaDB instance by passing one or more environment variables on the `docker run` command line. Do note that none of the variables below will have any effect if you start the container with a data directory that already contains a database: any pre-existing database will always be left untouched on container startup.
+
+### `DOCKUID`
+
+This variable is not mandatory and specifies the user id that will be set to run the application. It has default value `2004`.
+
+### `DOCKGID`
+
+This variable is not mandatory and specifies the group id that will be set to run the application. It has default value `2004`.
+
+### `DOCKUPGRADE`
+
+This variable is not mandatory and specifies if the container has to launch software update at startup or not. Valid values are `0` and `1`. It has default value `0`.
 
 ### `MYSQL_ROOT_PASSWORD`
 
@@ -47,3 +67,15 @@ This is an optional variable. Set to `yes` to generate a random initial password
 
 Sets root (*not* the user specified in `MYSQL_USER`!) user as expired once init is complete, forcing a password change on first login. *NOTE*: This feature is supported on MySQL 5.6+ only. Using this option on MySQL 5.5 will throw an appropriate error during initialization.
 
+## Notes
+
+* The docker entrypoint can upgrade operating system at each startup. To enable this feature, just add `-e DOCKUPGRADE=1` at container creation.
+* As an alternative to passing sensitive information via environment variables, `_FILE` may be appended to the previously listed environment variables, causing the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in `/run/secrets/<secret_name>` files. 
+* When a container is started for the first time, a new database with the specified name will be created and initialized with the provided configuration variables. Furthermore, it will execute files with extensions `.sh`, `.sql` and `.sql.gz` that are found in `/docker-entrypoint-initdb.d`.
+* Note that users on host systems with `SELinux` enabled may see issues when storing data files outside the container. The current workaround is to assign the relevant `SELinux` policy type to the new data directory so that the container will be allowed to access it:
+
+    $ chcon -Rt svirt_sandbox_file_t /my/own/datadir
+
+## Issues
+
+If you encounter an issue please open a ticket at [github](https://github.com/digrouz/docker-mariadb/issues)

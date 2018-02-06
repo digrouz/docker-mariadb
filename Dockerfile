@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM centos:7
 LABEL maintainer "DI GREGORIO Nicolas <ndigregorio@ndg-consulting.tech>"
 
 ### Environment variables

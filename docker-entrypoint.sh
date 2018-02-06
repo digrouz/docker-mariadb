@@ -6,6 +6,7 @@ MYUSER="mysql"
 MYGID="2004"
 MYUID="2004"
 OS=""
+MYUPGRADE="0"
 
 DectectOS(){
   if [ -e /etc/alpine-release ]; then
@@ -16,6 +17,32 @@ DectectOS(){
     fi
     if grep -q "NAME=\"CentOS Linux\"" /etc/os-release ; then
       OS="centos"
+    fi
+  fi
+}
+
+AutoUpgrade(){
+  if [ "$(id -u)" = '0' ]; then
+    if [ -n "${DOCKUPGRADE}" ]; then
+      MYUPGRADE="${DOCKUPGRADE}"
+    fi
+    if [ "${MYUPGRADE}" == 1 ]; then
+      if [ "${OS}" == "alpine" ]; then
+        apk --no-cache upgrade
+        rm -rf /var/cache/apk/*
+      elif [ "${OS}" == "ubuntu" ]; then
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get update
+        apt-get -y --no-install-recommends dist-upgrade
+        apt-get -y autoclean
+        apt-get -y clean
+        apt-get -y autoremove
+        rm -rf /var/lib/apt/lists/*
+      elif [ "${OS}" == "centos" ]; then
+        yum upgrade -y
+        yum clean all
+        rm -rf /var/cache/yum/*
+      fi
     fi
   fi
 }
@@ -124,7 +151,7 @@ ConfigureUser () {
 }
 
 DockLog(){
-  if [ "${OS}" == "centos" ]; then
+  if [ "${OS}" == "centos" ] || [ "${OS}" == "alpine" ]; then
     echo "${1}"
   else
     logger "${1}"
@@ -132,6 +159,7 @@ DockLog(){
 }
 
 DectectOS
+AutoUpgrade
 ConfigureUser
 
 # if command starts with an option, prepend mysqld
