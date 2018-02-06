@@ -74,6 +74,7 @@ Sets root (*not* the user specified in `MYSQL_USER`!) user as expired once init 
 * When a container is started for the first time, a new database with the specified name will be created and initialized with the provided configuration variables. Furthermore, it will execute files with extensions `.sh`, `.sql` and `.sql.gz` that are found in `/docker-entrypoint-initdb.d`.
 * Note that users on host systems with `SELinux` enabled may see issues when storing data files outside the container. The current workaround is to assign the relevant `SELinux` policy type to the new data directory so that the container will be allowed to access it:
 
+
     $ chcon -Rt svirt_sandbox_file_t /my/own/datadir
 
 ## Issues
