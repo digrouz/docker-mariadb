@@ -4,56 +4,50 @@ LABEL maintainer "DI GREGORIO Nicolas <ndigregorio@ndg-consulting.tech>"
 ### Environment variables
 ENV LANG='en_US.UTF-8' \
     LANGUAGE='en_US.UTF-8' \
-    MDB_VERSION='10.2' 
+    TERM='xterm' \
+    APPUSER='mysql' \
+    APPGID='2004' \
+    APPUID='2004' \
+    MDB_VERSION='10.5'
+
+# Copy config files
+COPY root/ /
 
 ### Install Application
-RUN { \
-      echo "[mariadb]"; \
-      echo "name = MariaDB"; \
-      echo "baseurl = http://yum.mariadb.org/${MDB_VERSION}/centos7-amd64"; \
-      echo "gpgcheck=1"; \
-      echo "gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB"; \
-      echo "enabled=1"; \
-    } | tee /tmp/MariaDB.repo  && \
+RUN set -x && \
+    chmod 1777 /tmp && \
+    . /usr/local/bin/docker-entrypoint-functions.sh && \
+    MYUSER="${APPUSER}" && \
+    MYUID="${APPUID}" && \
+    MYGID="${APPGID}" && \
+    ConfigureUser && \
+    yum-config-manager --add-repo /tmp/custom.repo && \
+    sed -e "s/MDB_VERSION/${MDB_VERSION}/" -i /tmp/MariaDB.repo && \
     yum-config-manager --add-repo /tmp/MariaDB.repo && \
-    yum install -y http://www.percona.com/downloads/percona-release/redhat/0.1-4/percona-release-0.1-4.noarch.rpm && \
     yum update -y && \
-    yum install -y MariaDB-server \
-                   MariaDB-client \
-                   percona-xtrabackup-24 \
-                   socat \
-                   pwgen \
+    yum install -y \
+      MariaDB-server \
+      MariaDB-backup \
+      MariaDB-client \
+      socat \
+      pwgen \
+      su-exec \
+      tzdata \
+      xz-utils \
     && \
     mkdir /docker-entrypoint-initdb.d && \
-    rm -rf /var/lib/mysql &&  \
+    rm -rf /var/lib/mysql && \
     mkdir -p /var/lib/mysql /var/run/mysqld && \
-    chown -R mysql:mysql /var/lib/mysql /var/run/mysqld && \
+    chown -R "${MYUSER}":"${MYUSER}" /var/lib/mysql /var/run/mysqld && \
     chmod 777 /var/run/mysqld && \
     find /etc/my.cnf.d/ -name '*.cnf' -print0 \
-		    | xargs -0 grep -lZE '^(bind-address|log)' \
-		    | xargs -rt -0 sed -Ei 's/^(bind-address|log)/#&/' \
+      | xargs -0 grep -lZE '^(bind-address|log|user\s)' \
+      | xargs -rt -0 sed -Ei 's/^(bind-address|log|user\s)/#&/' \
     && \
-    { \
-      echo "[mysqld]"; \
-      echo "query_cache_type=0"; \
-      echo "innodb_buffer_pool_instances=1"; \
-      echo "key_buffer_size=128M"; \
-      echo "tmp_table_size=256M"; \
-      echo "max_heap_table_size=128M"; \
-      echo "skip-innodb_doublewrite"; \
-      echo "skip-host-cache"; \
-      echo "skip-name-resolve"; \
-    } | tee /etc/my.cnf.d/docker.cnf  && \
-    yum install -y gcc \
-                   git \
-                   make \
-    && \
-    git clone --depth 1 https://github.com/ncopa/su-exec /tmp/su-exec && \
-    cd /tmp/su-exec && \
-    make && \
-    cp /tmp/su-exec/su-exec /usr/local/bin/su-exec && \
-    yum history -y undo last && \
     yum clean all && \
+    mkdir /docker-entrypoint.d && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    ln -snf /usr/local/bin/docker-entrypoint.sh /docker-entrypoint.sh && \
     rm -rf /tmp/* \
            /var/cache/yum/* \
            /var/tmp/*
@@ -67,7 +61,7 @@ EXPOSE 3386
 ### Running User: not used, managed by docker-entrypoint.sh
 USER root
 
-### Start postgres
+### Start mariadb
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["mysqld"]
