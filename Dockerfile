@@ -62,7 +62,6 @@ EXPOSE 3386
 USER root
 
 ### Start mariadb
-COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["mysqld"]
 

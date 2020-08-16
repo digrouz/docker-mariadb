@@ -3,16 +3,19 @@
 # logging functions
 mysql_log() {
 	local type="$1"; shift
-	DockLog '%s [%s] [Entrypoint]: %s\n' "$(date --rfc-3339=seconds)" "$type" "$*"
+	local logentry=$(printf '[%s] [Entrypoint]: %s\n' "$type" "$*")
+	DockLog ${logentry}
 }
 mysql_note() {
 	mysql_log Note "$@"
 }
 mysql_warn() {
-	mysql_log Warn "$@" >&2
+	#mysql_log Warn "$@" >&2
+	mysql_log Warn "$@" 
 }
 mysql_error() {
-	mysql_log ERROR "$@" >&2
+	#mysql_log ERROR "$@" >&2
+	mysql_log ERROR "$@" 
 	exit 1
 }
 
