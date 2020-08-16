@@ -1,6 +1,8 @@
 FROM centos:7
 LABEL maintainer "DI GREGORIO Nicolas <ndigregorio@ndg-consulting.tech>"
 
+ARG MDB_VERSION='10.5'
+
 ### Environment variables
 ENV LANG='en_US.UTF-8' \
     LANGUAGE='en_US.UTF-8' \
@@ -8,7 +10,7 @@ ENV LANG='en_US.UTF-8' \
     APPUSER='mysql' \
     APPGID='2004' \
     APPUID='2004' \
-    MDB_VERSION='10.5'
+    MDB_VERSION="$MDB_VERSION"
 
 # Copy config files
 COPY root/ /
