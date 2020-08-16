@@ -4,7 +4,7 @@
 mysql_log() {
 	local type="$1"; shift
 	local logentry=$(printf '[%s] [Entrypoint]: %s\n' "$type" "$*")
-	DockLog ${logentry}
+	DockLog "${logentry}"
 }
 mysql_note() {
 	mysql_log Note "$@"
