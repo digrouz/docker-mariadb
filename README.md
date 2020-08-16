@@ -6,7 +6,7 @@ Install Mariadb into a Linux Container
 ## Tags
 Several tags are available:
 * `latest`: see `10.5`
-* `10.5`: [Dokerfile_centos7](https://github.com/digrouz/docker-mariadb/blob/Dockerfile_centos7)
+* `10.5`: [Dokerfile_centos7](https://github.com/digrouz/docker-mariadb/blob/master/Dockerfile_centos7)
 
 ## Description
 
