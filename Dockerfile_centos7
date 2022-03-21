@@ -1,7 +1,7 @@
 FROM centos:7
 LABEL maintainer "DI GREGORIO Nicolas <ndigregorio@ndg-consulting.tech>"
 
-ARG MDB_VERSION='10.5'
+ARG MDB_VERSION='10.7.3'
 
 ### Environment variables
 ENV LANG='en_US.UTF-8' \
